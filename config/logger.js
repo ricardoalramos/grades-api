@@ -11,7 +11,7 @@ const myFormat = format.printf(({ level, message, label, timestamp }) => {
 
 const logger = createLogger({
   transports: [
-    new transports.Console(),
+    //new transports.Console(),
     new transports.MongoDB({
       level: 'info',
       db: process.env.MONGODB,

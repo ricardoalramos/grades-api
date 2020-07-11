@@ -7,7 +7,7 @@ const create = async (req, res) => {
   try {
     const { grade } = req.body;
     const date = await Grade.save(grade);
-    res.send(data);
+    res.send({ message: 'Grade Inserida com Sucesso' });
     logger.info(`POST /grade - ${JSON.stringify()}`);
   } catch (error) {
     res
@@ -26,8 +26,12 @@ const findAll = async (req, res) => {
     : {};
 
   try {
-    const data = await Grade.find({ condition });
-    res.send(data);
+    const data = await Grade.find(condition);
+    if (!data) {
+      res.status(404).send({ message: 'Nenhum Pokemon Encontrado' });
+    } else {
+      res.send(data);
+    }
     logger.info(`GET /grade`);
   } catch (error) {
     res
@@ -42,7 +46,11 @@ const findOne = async (req, res) => {
 
   try {
     const data = await Grade.findbyId({ _id: id });
-    res.send(data);
+    if (!data) {
+      res.status(404).send({ message: 'Nenhum Pokemon Encontrado' });
+    } else {
+      res.send(data);
+    }
 
     logger.info(`GET /grade - ${id}`);
   } catch (error) {
@@ -61,8 +69,14 @@ const update = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const data = await Grade.findByIdAndUpdate({ _id: id });
-    res.send({ message: 'Grade atualizado com sucesso' });
+    const data = await Grade.findByIdAndUpdate({ _id: id }, req.body, {
+      new: true,
+    });
+    if (!data) {
+      res.status(404).send({ message: 'Nenhum Pokemon Encontrado' });
+    } else {
+      res.send(data);
+    }
 
     logger.info(`PUT /grade - ${id} - ${JSON.stringify(req.body)}`);
   } catch (error) {
@@ -75,8 +89,15 @@ const remove = async (req, res) => {
   const id = req.params.id;
 
   try {
-    const data = await Grade.findByIdAndRemove({ _id: id });
-    res.send({ message: 'Grade excluido com sucesso' });
+    const data = await Grade.findByIdAndDelete({ _id: id });
+
+    if (!data.length) {
+      res
+        .status(404)
+        .send({ message: 'Nenhum Pokemon Encontrado para exclusão' });
+    } else {
+      res.send({ message: 'Grade Excluida com Sucesso' });
+    }
 
     logger.info(`DELETE /grade - ${id}`);
   } catch (error) {
@@ -88,17 +109,19 @@ const remove = async (req, res) => {
 };
 
 const removeAll = async (req, res) => {
-  const id = req.params.id;
-
   try {
-    res.send({
-      message: `Grades excluidos`,
-    });
-    logger.info(`DELETE /grade`);
+    const data = await Grade.deleteMany();
+    if (!data.length) {
+      res.send({ message: `Erro ao Excluir as Grades` });
+    } else {
+      res.send({
+        message: `Grades excluidos`,
+      });
+      logger.info(`DELETE /grade`);
+    }
   } catch (error) {
     res.status(500).send({ message: 'Erro ao excluir todos as Grades' });
     logger.error(`DELETE /grade - ${JSON.stringify(error.message)}`);
   }
 };
-
 export default { create, findAll, findOne, update, remove, removeAll };
