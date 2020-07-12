@@ -12,6 +12,14 @@ export default (mongoose) => {
     value: { type: Number, required: true },
     lastModified: { type: Date, default: Date.now },
   });
+
+  schema.method('toJSON', function () {
+    const { __V, _id, ...object } = this.toObject();
+
+    object.id = _id;
+
+    return object;
+  });
   const Grade = mongoose.model('grades', schema, 'grades');
   return Grade;
 };
