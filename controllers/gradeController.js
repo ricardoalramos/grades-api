@@ -1,5 +1,6 @@
 import { db } from '../models/index.js';
 import { logger } from '../config/logger.js';
+import cors from 'cors';
 
 const Grade = db.grade;
 
