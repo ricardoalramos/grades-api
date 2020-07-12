@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: 'https://grades-api-rramos.herokuapp.com',
+    origin: 'https://grades-app-rramos.herokuapp.com',
   })
 );
 
