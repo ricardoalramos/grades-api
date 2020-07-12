@@ -48,7 +48,7 @@ const findOne = async (req, res) => {
   try {
     const data = await Grade.findbyId({ _id: id });
     if (data.length < 1) {
-      res.status(404).send({ message: 'Nenhum Pokemon Encontrado' });
+      res.status(404).send({ message: 'Nenhum Grade Encontrado' });
     } else {
       res.send(data);
     }
